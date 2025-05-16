@@ -7,8 +7,8 @@ spring:
       client:
         registration:
           capitalone:
-            client-id: ${CAP1_CLIENT_ID}
-            client-secret: ${CAP1_CLIENT_SECRET}
+            client-id:  ${CAPI_CLIENT_ID}
+            client-secret: ${CAPI_CLIENT_SECRET}
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
