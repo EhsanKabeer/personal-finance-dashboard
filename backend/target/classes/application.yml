@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          capitalone:
+            client-id: ${CAP1_CLIENT_ID}
+            client-secret: ${CAP1_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - accounts
+              - transactions
+        provider:
+          capitalone:
+            authorization-uri: https://sandbox.capitalone.io/oauth2/authorize
+            token-uri: https://sandbox.capitalone.io/oauth2/token
+            user-info-uri: https://sandbox.capitalone.io/userinfo
+            user-name-attribute: sub
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/dashboard
+    username: user
+    password: pass
+
+  jpa:
+    hibernate:
+      ddl-auto: update
