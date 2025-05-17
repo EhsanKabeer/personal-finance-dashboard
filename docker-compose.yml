@@ -1,11 +1,11 @@
-version: '3.8'
 services:
-  postgres:
+  db:
     image: postgres:15
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: dashboard
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB:   ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -13,22 +13,36 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      - db
+    env_file:
+      - .env
     environment:
-      CAP1_CLIENT_ID: ${CAP1_CLIENT_ID}
-      CAP1_CLIENT_SECRET: ${CAP1_CLIENT_SECRET}
+      # override only if you need to tweak at runtime
+      SPRING_DATASOURCE_URL:      ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JWT_SECRET:                ${JWT_SECRET}
+
+      # Capital One sandbox credentials:
+      CAPI_CLIENT_ID:     ${CAP1_CLIENT_ID}
+      CAPI_CLIENT_SECRET: ${CAP1_CLIENT_SECRET}
+      CAPI_ENVIRONMENT:   ${CAP1_ENVIRONMENT}
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3000:80"
+    env_file:
+      - .env
     environment:
-      REACT_APP_API_BASE: http://localhost:8080
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
     depends_on:
       - backend
 

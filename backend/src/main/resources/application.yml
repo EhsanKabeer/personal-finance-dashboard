@@ -1,3 +1,4 @@
+# src/main/resources/application.yml
 server:
   port: 8080
 
@@ -7,7 +8,7 @@ spring:
       client:
         registration:
           capitalone:
-            client-id:  ${CAPI_CLIENT_ID}
+            client-id:     ${CAPI_CLIENT_ID}
             client-secret: ${CAPI_CLIENT_SECRET}
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
@@ -17,15 +18,20 @@ spring:
         provider:
           capitalone:
             authorization-uri: https://sandbox.capitalone.io/oauth2/authorize
-            token-uri: https://sandbox.capitalone.io/oauth2/token
-            user-info-uri: https://sandbox.capitalone.io/userinfo
+            token-uri:         https://sandbox.capitalone.io/oauth2/token
+            user-info-uri:     https://sandbox.capitalone.io/userinfo
             user-name-attribute: sub
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/dashboard
-    username: user
-    password: pass
+    # now driven by your .env / docker-compose.yml
+    url:               ${SPRING_DATASOURCE_URL}
+    username:          ${SPRING_DATASOURCE_USERNAME}
+    password:          ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
